@@ -1,0 +1,88 @@
+<div class="card">
+  <div class="card-header">Deposits and Withdrawals</div>
+  <div class="card-body" *ngIf="depositInfo.length > 0">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="callout callout-info">
+              <small class="text-muted">Total Deposit</small>
+              <br />
+              <strong class="h4">{{ totalDeposit | currency: "INR" }}</strong>
+            </div>
+          </div>
+          <!--/.col-->
+          <div class="col-sm-6">
+            <div class="callout callout-danger">
+              <small class="text-muted">Total Volume</small>
+              <br />
+              <strong class="h4">{{ totalVolume | currency: "INR" }}</strong>
+            </div>
+          </div>
+          <!--/.col-->
+        </div>
+        <!--/.row-->
+        <hr class="mt-0" />
+      </div>
+      <!--/.col-->
+      <div class="col-sm-6">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="callout callout-warning">
+              <small class="text-muted">Commission</small>
+              <br />
+              <strong class="h4"
+                >{{ totalCommission | currency: "INR" }}</strong
+              >
+            </div>
+          </div>
+          <!--/.col-->
+          <div class="col-sm-6">
+            <div class="callout callout-success">
+              <small class="text-muted">Transactions</small>
+              <br />
+              <strong class="h4">{{ depositInfo.length }}</strong>
+            </div>
+          </div>
+          <!--/.col-->
+        </div>
+        <!--/.row-->
+        <hr class="mt-0" />
+      </div>
+      <!--/.col-->
+    </div>
+    <!--/.row-->
+    <br />
+    <table class="table table-responsive-sm table-hover table-outline mb-0 table-sm">
+      <thead class="thead-light">
+        <tr>
+          <th>Date</th>
+          <th>Transaction</th>
+          <th>Currency</th>
+          <th class="text-right">Volume</th>
+          <th class="text-right">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let deposit of depositInfo">
+          <td class="text-left">{{ deposit.Date }}</td>
+          <td>
+            <div>{{ deposit.Currency }}</div>
+          </td>
+          <td>
+            <div>{{ deposit.Transaction }}</div>
+          </td>
+          <td class="text-right">
+            <div>{{ deposit.Volume }}</div>
+            <div class="small text-muted">
+              Commision: {{ deposit.Commision | currency: "INR" }}
+            </div>
+          </td>
+          <td class="text-right">
+            <strong>{{ deposit.Total | currency: "INR" }}</strong>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
