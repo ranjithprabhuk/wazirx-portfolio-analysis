@@ -6,6 +6,11 @@
   application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
   application/vnd.ms-excel"
     (change)="onFileChange($event)"
+    style="
+       {
+        visibility: hidden !important;
+      }
+    "
   />
   <label class="btn btn-primary" for="fileSelect"> Upload Trade Report </label>
 </nav>
@@ -396,6 +401,14 @@
         <div class="row">
           <div class="col-md-12">
             <tabset>
+              <tab heading="Portfolio">
+                <app-trades
+                  [tradeInfo]="tradeInfo"
+                  [totalDeposit]="totalDeposit"
+                  [totalCommission]="totalCommission"
+                  [totalVolume]="totalVolume"
+                ></app-trades>
+              </tab>
               <tab heading="Deposits">
                 <app-deposits
                   [depositInfo]="depositInfo"
@@ -403,14 +416,6 @@
                   [totalCommission]="totalCommission"
                   [totalVolume]="totalVolume"
                 ></app-deposits>
-              </tab>
-              <tab heading="Trades">
-                <app-trades
-                  [depositInfo]="depositInfo"
-                  [totalDeposit]="totalDeposit"
-                  [totalCommission]="totalCommission"
-                  [totalVolume]="totalVolume"
-                ></app-trades>
               </tab>
               <tab heading="Messages">
                 3. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed

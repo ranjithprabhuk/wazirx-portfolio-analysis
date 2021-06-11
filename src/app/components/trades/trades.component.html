@@ -1,22 +1,34 @@
 <div class="card">
-  <div class="card-header">Deposits and Withdrawals</div>
-  <div class="card-body" *ngIf="depositInfo.length > 0">
+  <div class="card-header">Portfolio</div>
+  <div class="card-body" *ngIf="tradeInfo.length > 0 && totalPortfolioAmount">
     <div class="row">
       <div class="col-sm-6">
         <div class="row">
-          <div class="col-sm-6">
-            <div class="callout callout-info">
-              <small class="text-muted">Total Deposit</small>
-              <br />
-              <strong class="h4">{{ totalDeposit | currency: "INR" }}</strong>
-            </div>
-          </div>
           <!--/.col-->
           <div class="col-sm-6">
             <div class="callout callout-danger">
-              <small class="text-muted">Total Volume</small>
+              <small class="text-muted">Total Portfolio</small>
               <br />
-              <strong class="h4">{{ totalVolume | currency: "INR" }}</strong>
+              <strong class="h4">{{
+                totalPortfolioAmount | currency: "INR"
+              }}</strong>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div
+              class="callout callout-info"
+              [ngClass]="{
+                'text-success': profitOrLossAmount < 0,
+                'text-danger': profitOrLossAmount > 0
+              }"
+            >
+              <small class="text-muted">{{
+                profitOrLossAmount < 0 ? "Total Profit" : "Total Loss"
+              }}</small>
+              <br />
+              <strong class="h4">{{
+                profitOrLossAmount | currency: "INR"
+              }}</strong>
             </div>
           </div>
           <!--/.col-->
@@ -29,19 +41,21 @@
         <div class="row">
           <div class="col-sm-6">
             <div class="callout callout-warning">
-              <small class="text-muted">Commission</small>
+              <small class="text-muted">Profit Coin Percentage</small>
               <br />
               <strong class="h4"
-                >{{ totalCommission | currency: "INR" }}</strong
+                ><strong class="h4"
+                  >{{ (profitCoins / tradeInfo.length) * 100 }}%</strong
+                ></strong
               >
             </div>
           </div>
           <!--/.col-->
           <div class="col-sm-6">
             <div class="callout callout-success">
-              <small class="text-muted">Transactions</small>
+              <small class="text-muted">Total Coins</small>
               <br />
-              <strong class="h4">{{ depositInfo.length }}</strong>
+              <strong class="h4">{{ tradeInfo.length }}</strong>
             </div>
           </div>
           <!--/.col-->
@@ -53,36 +67,75 @@
     </div>
     <!--/.row-->
     <br />
-    <table class="table table-responsive-sm table-hover table-outline mb-0 table-sm">
-      <thead class="thead-light">
-        <tr>
-          <th>Date</th>
-          <th>Transaction</th>
-          <th>Currency</th>
-          <th class="text-right">Volume</th>
-          <th class="text-right">Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let deposit of depositInfo">
-          <td class="text-left">{{ deposit.Date }}</td>
-          <td>
-            <div>{{ deposit.Currency }}</div>
-          </td>
-          <td>
-            <div>{{ deposit.Transaction }}</div>
-          </td>
-          <td class="text-right">
-            <div>{{ deposit.Volume }}</div>
-            <div class="small text-muted">
-              Commision: {{ deposit.Commision | currency: "INR" }}
-            </div>
-          </td>
-          <td class="text-right">
-            <strong>{{ deposit.Total | currency: "INR" }}</strong>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="row">
+      <table
+        class="
+          table table-responsive-sm table-hover table-outline
+          mb-0
+          table-sm
+        "
+      >
+        <thead class="thead-light">
+          <tr>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th class="text-center">Profit / Loss</th>
+            <th class="text-right">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let deposit of tradeInfo | sort: sortColumn">
+            <td>
+              <div class="badge badge-info">{{ deposit.Market }}</div>
+              <div>{{ deposit.Volume }}</div>
+            </td>
+            <td class="text-left">
+              <div>
+                {{ deposit.CurrentPrice | currency: "INR":"symbol":"1.2-5" }}
+              </div>
+              <div
+                [ngClass]="{
+                  'text-success': deposit.PriceDifference >= 0,
+                  'text-danger': deposit.PriceDifference < 0
+                }"
+                class="small"
+              >
+                {{ deposit.Price | currency: "INR":"symbol":"1.2-5" }} |
+                {{ deposit.PriceDifference | currency: "INR":"symbol":"1.2-5" }}
+              </div>
+            </td>
+            <td
+              class="text-center"
+              [ngClass]="{
+                'text-success': deposit.Percentage >= 0,
+                'text-danger': deposit.Percentage < 0
+              }"
+            >
+              <div>{{ deposit.Percentage }}%</div>
+              <div
+                class="small badge"
+                [ngClass]="{
+                  'badge-success': deposit.profitOrLossAmount > 0,
+                  'badge-primary':
+                    deposit.profitOrLossAmount <= 0 &&
+                    deposit.profitOrLossAmount > -1000,
+                  'badge-warning':
+                    deposit.profitOrLossAmount < -1000 &&
+                    deposit.profitOrLossAmount > -2500,
+                  'badge-danger': deposit.profitOrLossAmount <= -4000
+                }"
+              >
+                {{
+                  deposit.profitOrLossAmount | currency: "INR":"symbol":"1.2-5"
+                }}
+              </div>
+            </td>
+            <td class="text-right">
+              <strong>{{ deposit.Total | currency: "INR" }}</strong>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

@@ -1,17 +1,20 @@
 import { Component } from "@angular/core";
 import * as XLSX from "xlsx";
+import { initialDepositInfo, initialTradeInfo } from "../../initialData";
 
 @Component({
   selector: "app-dashboard",
   templateUrl: "./default-layout.component.html",
 })
 export class DefaultLayoutComponent {
+  constructor() {
+    this.processTradeInfo(initialTradeInfo);
+    this.processDepositInfo(initialDepositInfo);
+  }
   public depositInfo = [];
   public totalDeposit = 0;
   public totalCommission = 0;
   public totalVolume = 0;
-
-  public tradeInfo = [];
 
   processDepositInfo = (data: any[]) => {
     this.depositInfo = data;
@@ -26,7 +29,26 @@ export class DefaultLayoutComponent {
     });
   };
 
-  processTradeInfo = (data: any[]) => {};
+  public tradeInfo = [];
+
+  processTradeInfo = (data: any[]) => {
+    data.forEach((d, index) => {
+      const FeeCurrency = d["Fee Currency"];
+      const { Date, Fee, Market, Price, Total, Trade, Volume } = d;
+      if (Trade?.toLowerCase() === "buy") {
+        const coin = this.tradeInfo.find((t) => t.Market === Market);
+        if (coin) {
+          const existingItem = coin.Price * coin.Volume;
+          const currentItem = d.Price * d.Volume;
+          coin.Price = (currentItem + existingItem) / (coin.Volume + d.Volume);
+          coin.Volume += d.Volume;
+          coin.Total = coin.Price * coin.Volume;
+        } else {
+          this.tradeInfo.push(d);
+        }
+      }
+    });
+  };
 
   onFileChange(event: any) {
     /* wire up file reader */
@@ -47,7 +69,7 @@ export class DefaultLayoutComponent {
         const ws: XLSX.WorkSheet = wb.Sheets[wsname];
 
         switch (index) {
-          case 2:
+          case 1:
             this.processTradeInfo(XLSX.utils.sheet_to_json(ws));
             break;
           case 3:

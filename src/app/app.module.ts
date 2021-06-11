@@ -2,6 +2,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { LocationStrategy, HashLocationStrategy } from "@angular/common";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { HttpClientModule } from "@angular/common/http";
 
 import { PerfectScrollbarModule } from "ngx-perfect-scrollbar";
 
@@ -35,6 +36,8 @@ import { TabsModule } from "ngx-bootstrap/tabs";
 import { ChartsModule } from "ng2-charts";
 import { DepositsComponent } from "./components/deposits/deposits.component";
 import { TradesComponent } from "./components/trades/trades.component";
+import { TableSortPipe } from "./pipes/table-sorting.pipes";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
   imports: [
@@ -52,12 +55,15 @@ import { TradesComponent } from "./components/trades/trades.component";
     ChartsModule,
     IconModule,
     IconSetModule.forRoot(),
+    HttpClientModule,
+    FormsModule
   ],
   declarations: [
     AppComponent,
     ...APP_CONTAINERS,
     DepositsComponent,
     TradesComponent,
+    TableSortPipe,
   ],
   providers: [
     {
